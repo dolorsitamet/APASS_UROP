@@ -39,7 +39,7 @@ for i in range(0, len(data)-1):
 		files.remove('.DS_Store')
 
 	for j in range(0, len(files), 5):
-		to_file = open(directory_name + "/Objects/%s_objects.txt" % files[j][:12], 'w')
+		to_file = open("/Users/katiedunn/desktop/APASS_UROP/writeFiles/Objects/%s_objects.txt" % files[j][:12], 'w')
 		a = open(directory_name + "/%s/moddat/%s" % (data[i], files[j]))
 		b = open(directory_name + "/%s/moddat/%s" % (data[i], files[j+1]))
 		c = open(directory_name + "/%s/moddat/%s" % (data[i], files[j+2]))
