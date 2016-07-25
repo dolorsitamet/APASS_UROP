@@ -11,17 +11,17 @@ start_time = time.time()
 ROOT_PATH = "/Users/katiedunn/desktop/APASS_UROP/"
 DATA_PATH = ROOT_PATH + "Data/"
 WRITE_PATH = ROOT_PATH + "writeFiles/Objects_3/"
-directoryFiles = os.listdir(DATA_PATH)
 MARGIN_ERROR = .0004
 
+DATA_FOLDER_LIST = os.listdir(DATA_PATH)
 
 #column 4 is magnitude
 #column 3 is object number
 #column 9 and 10 are RA and dec
 #column 13 is ref ID
 
-if '.DS_Store' in directoryFiles:
-	directoryFiles.remove('.DS_Store')
+if '.DS_Store' in DATA_FOLDER_LIST:
+	DATA_FOLDER_LIST.remove('.DS_Store')
 
 def get_RA_dec(line):
     split = line.split()
@@ -42,69 +42,73 @@ def process_file_lines(fileLine, keepStars=False):
 	else:
 		return [ (idx,) + get_RA_dec(line) for idx, line in enumerate(fileLine)]
 
-def get_ID_RA_Dec():
-	pass
+def get_n_files(nFolder):
+	def isValidFile(fileName):
+		return isfile(fileName) and ".DS_Store" not in fileName
 
-def is_valid_folder_names():
-	pass
+	nFolderPath = DATA_PATH + "%s/moddat/" % nFolder
+	directoryListing = os.listdir(nFolderPath) 
+	files = [f for f in directoryListing if isValidFile(join(nFolderPath, f))] 
+	return files
+
+def get_file_lines(nFolder, nFileName):
+	openedFile = open(DATA_PATH + "%s/moddat/%s" % (nFolder, nFileName))
+	fileLines = list(openedFile.readlines())
+	return fileLines
+
+def write_matching_lines(writeFile, myFiveFiles, fileNo, lineNo):
+	writeFile.write(remove_zero(myFiveFiles[fileNo][lineNo]))
 
 
-for dirFile in directoryFiles:
+for nFolder in DATA_FOLDER_LIST:
 	# Looping through each of the folders
-	myFiles = [1,1,1,1,1]
+	nFileNames = get_n_files(nFolder)
 
-	files = [f for f in os.listdir(DATA_PATH + "%s/moddat" % dirFile) if isfile(
-		join(DATA_PATH + "%s/moddat" % dirFile, f))] #all the files from a given night
-	if '.DS_Store' in files:
-		files.remove('.DS_Store')
+	for j in range(0, len(nFileNames), 5):
+		# j = 0, 5, 10, ...; this line goes to every fifth file
 
-	for j in range(0, len(files), 5):
-		to_file = open(WRITE_PATH + "%s_objects_3.txt" % files[j][:12], 'w')
+		writeFile = open(WRITE_PATH + "%s_objects_3.txt" % nFileNames[j][:12], 'w')
+		# katie is so cute!
+		# you look a lot nicer now
 
-		a = open(DATA_PATH + "%s/moddat/%s" % (dirFile, files[j]))
-		b = open(DATA_PATH + "%s/moddat/%s" % (dirFile, files[j+1]))
-		c = open(DATA_PATH + "%s/moddat/%s" % (dirFile, files[j+2]))
-		d = open(DATA_PATH + "%s/moddat/%s" % (dirFile, files[j+3]))
-		e = open(DATA_PATH + "%s/moddat/%s" % (dirFile, files[j+4]))
+		myFiveFiles = [get_file_lines(nFolder, nFileNames[j+i]) for i in range(5)]
+		myFiveData = [process_file_lines(fileLine) for fileLine in myFiveFiles]
+		mfd = myFiveData
 
-		a_lines = list(a.readlines())
-		b_lines = list(b.readlines())
-		c_lines = list(c.readlines())
-		d_lines = list(d.readlines())
-		e_lines = list(e.readlines())
-
-		a_ra_dec = process_file_lines(a_lines)
-		b_ra_dec = process_file_lines(b_lines)
-		c_ra_dec = process_file_lines(c_lines)
-		d_ra_dec = process_file_lines(d_lines)
-		e_ra_dec = process_file_lines(e_lines)
+		a_ra_dec = myFiveData[0]
+		b_ra_dec = myFiveData[1]
+		c_ra_dec = myFiveData[2]
+		d_ra_dec = myFiveData[3]
+		e_ra_dec = myFiveData[4]
 	 	# [[lineNumber, RA, dec], [...]]
 
-		for idx1, RA1, dec1 in a_ra_dec:
-			for idx2, RA2, dec2 in b_ra_dec:
+	 	lineNo = [None]*5
+	 	RA = [None]*5
+	 	dec = [None]*5
 
-				if (abs(RA2-RA1) <= MARGIN_ERROR and abs(dec2-dec1) <= MARGIN_ERROR):
-					for idx3, RA3, dec3 in c_ra_dec:
+		for (lineNo[0], RA[0], dec[0]) in mfd[0]:
+			for (lineNo[1], RA[1], dec[1]) in mfd[1]:
 
-						if (abs(RA3 - RA1) <= MARGIN_ERROR and abs(dec3 - dec1) <= MARGIN_ERROR):
-							for idx4, RA4, dec4 in d_ra_dec:
+				if (abs(RA[1]-RA[0]) <= MARGIN_ERROR and abs(dec[1]-dec[0]) <= MARGIN_ERROR):
+					for (lineNo[2], RA[2], dec[2]) in mfd[2]:
 
-								if (abs(RA4 - RA1) <= MARGIN_ERROR and abs(dec4 - dec1) <= MARGIN_ERROR):
-									for idx5, RA5, dec5 in e_ra_dec:
+						if (abs(RA[2] - RA[0]) <= MARGIN_ERROR and abs(dec[2] - dec[0]) <= MARGIN_ERROR):
+							for (lineNo[3], RA[3], dec[3]) in mfd[3]:
 
-										if (abs(RA5 - RA1) <= MARGIN_ERROR and abs(dec5 - dec1) <= MARGIN_ERROR):
-											to_file.write(remove_zero(a_lines[idx1]))
-											to_file.write(remove_zero(b_lines[idx2]))
-											to_file.write(remove_zero(c_lines[idx3]))
-											to_file.write(remove_zero(d_lines[idx4]))
-											to_file.write(remove_zero(e_lines[idx5]))		
-											to_file.write("\n")
-		to_file.close()
-		a.close()
-		b.close()
-		c.close()
-		d.close()
-		e.close()
+								if (abs(RA[3] - RA[0]) <= MARGIN_ERROR and abs(dec[3] - dec[0]) <= MARGIN_ERROR):
+									for (lineNo[4], RA[4], dec[4]) in mfd[4]:
+
+										if (abs(RA[4] - RA[0]) <= MARGIN_ERROR and abs(dec[4] - dec[0]) <= MARGIN_ERROR):
+											for i in range(5):
+												write_matching_lines(writeFile, myFiveFiles, i, lineNo[i])		
+											writeFile.write("\n")
+
+		writeFile.close()
+		# a.close()
+		# b.close()
+		# c.close()
+		# d.close()
+		# e.close()
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
