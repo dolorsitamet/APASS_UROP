@@ -12,21 +12,21 @@ MARGIN_ERROR = .0004 #may need to adjust this later
 
 DATA_FOLDER_LIST = os.listdir(DATA_PATH)
 
-#column 3 is object number
-#column 4 is magnitude
-#column 9 and 10 are RA, dec
-#column 13 is refID
+#column 5 is magnitude
+#column 4 is object number
+#column 10 and 11 are RA and dec
+#column 14 is ref ID
 
 if '.DS_Store' in DATA_FOLDER_LIST:
 	DATA_FOLDER_LIST.remove('.DS_Store')
 
 def get_RA_dec(line):
     split = line.split()
-    return (float(split[8]), float(split[9]))
+    return (float(split[9]), float(split[10]))
 
 def is_star(line):
     split = line.split()
-    return float(split[12]) != 0.
+    return float(split[13]) != 0.
 
 def remove_zero(line):
 	split = line.split()

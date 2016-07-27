@@ -10,29 +10,30 @@ start_time = time.time()
 
 directory_name = "/Users/katiedunn/desktop/APASS_UROP/Data"
 data = os.listdir(directory_name)
+margin_error = .0004
 
-#column 4 is magnitude
-#column 3 is object number
-#column 9 and 10 are RA and dec
-#column 13 is ref ID
+#column 5 is magnitude
+#column 4 is object number
+#column 10 and 11 are RA and dec
+#column 14 is ref ID
 
 if '.DS_Store' in data:
 	data.remove('.DS_Store')
 
 def get_RA_dec(line):
     split = line.split()
-    return [float(split[8]), float(split[9])]
+    return [float(split[9]), float(split[10])]
 
 def is_star(line):
     split = line.split()
-    return float(split[12]) != 0.
+    return float(split[13]) != 0.
 
 def remove_zero(line):
 	split = line.split()
-	zeroless = ' '.join(split[:12])
+	zeroless = ' '.join(split[:13])
 	return zeroless + "\n"
 
-for i in range(0, len(data)-1):
+for i in range(0, len(data)):
 	files = [f for f in os.listdir(directory_name + "/%s/moddat" % data[i]) if isfile(
 		join(directory_name + "/%s/moddat" % data[i], f))] #all the files from a given night
 	if '.DS_Store' in files:
@@ -61,16 +62,16 @@ for i in range(0, len(data)-1):
 		for idx1, RA1, dec1 in a_ra_dec:
 			for idx2, RA2, dec2 in b_ra_dec:
 
-				if (abs(RA2-RA1) <= .0004 and abs(dec2-dec1) <= .0004):
+				if (abs(RA2-RA1) <= margin_error and abs(dec2-dec1) <= margin_error):
 					for idx3, RA3, dec3 in c_ra_dec:
 
-						if (abs(RA3 - RA1) <= .0004 and abs(dec3 - dec1) <= .0004):
+						if (abs(RA3 - RA1) <= margin_error and abs(dec3 - dec1) <= margin_error):
 							for idx4, RA4, dec4 in d_ra_dec:
 
-								if (abs(RA4 - RA1) <= .0004 and abs(dec4 - dec1) <= .0004):
+								if (abs(RA4 - RA1) <= margin_error and abs(dec4 - dec1) <= margin_error):
 									for idx5, RA5, dec5 in e_ra_dec:
 
-										if (abs(RA5 - RA1) <= .0004 and abs(dec5 - dec1) <= .0004):
+										if (abs(RA5 - RA1) <= margin_error and abs(dec5 - dec1) <= margin_error):
 											to_file.write(remove_zero(a_lines[idx1]))
 											to_file.write(remove_zero(b_lines[idx2]))
 											to_file.write(remove_zero(c_lines[idx3]))
@@ -85,5 +86,3 @@ for i in range(0, len(data)-1):
 		e.close()
 
 print("--- %s seconds ---" % (time.time() - start_time))
-
-
