@@ -30,7 +30,7 @@ def is_star(line):
 
 def remove_zero(line):
 	split = line.split()
-	zeroless = ' '.join(split[:12])
+	zeroless = ' '.join(split[:13])
 	return zeroless + "\n"
 
 def process_file_lines(fileLine, keepStars=False): #returns all line #s, RAs & decs for a file
@@ -107,7 +107,7 @@ for nFolder in DATA_FOLDER_LIST:
 											writeFile.write("\n")
 										else:
 											writeFile.write("\n")
-											#continue? pass? this is probably not working as is.
+											#not working. don't want newline every time line4 doesn't match
 								else:
 									if same_point(RA, dec, 0, 4):
 										write_matching_lines(writeFile, myFiveFiles, 4, lineNo[4]) #0124
