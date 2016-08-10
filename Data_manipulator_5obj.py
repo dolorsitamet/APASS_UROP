@@ -41,6 +41,8 @@ for i in range(0, len(data)):
 
 	for j in range(0, len(files), 5):
 		to_file = open("/Users/katiedunn/desktop/APASS_UROP/writeFiles/Objects/%s_objects.txt" % files[j][:12], 'w')
+
+		#if there are five files
 		a = open(directory_name + "/%s/moddat/%s" % (data[i], files[j]))
 		b = open(directory_name + "/%s/moddat/%s" % (data[i], files[j+1]))
 		c = open(directory_name + "/%s/moddat/%s" % (data[i], files[j+2]))
@@ -84,5 +86,10 @@ for i in range(0, len(data)):
 		c.close()
 		d.close()
 		e.close()
+
+		#elif there are four files
+		#elif there are three files
+		#elif there are two files
+		#else: ???
 
 print("--- %s seconds ---" % (time.time() - start_time))
