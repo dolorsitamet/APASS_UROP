@@ -73,12 +73,13 @@ for nFolder in DATA_FOLDER_LIST:
 	nFileNames = get_n_files(nFolder)
 
 	for j in range(0, len(nFileNames), 5):
-		print "New set of 5 files"
+		print "New set of 5 files " + str(time.time())
 		# j = 0, 5, 10, ...; this line goes to every fifth file
 
 		writeFile = open(WRITE_PATH + "%s_objects_3.txt" % nFileNames[j][:12], 'w')
 
 		myFiveFiles = [get_file_lines(nFolder, nFileNames[j+i]) for i in range(5)]
+		print myFiveFiles
 		myFiveData = [process_file_lines(fileLine) for fileLine in myFiveFiles]
 
 	 	lineNo = [None]*5
