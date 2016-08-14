@@ -25,7 +25,7 @@ def get_file_lines(nFolder, nFileName):
 
 def process_flist_lines(line):
 	elements = line.split()
-	numberOfFilters = (len(elements)-1)/2
+	numberOfFilters = (len(elements)-1) / 2
 	relevantFieldFiles = elements[numberOfFilters+1:len(elements)]
 	return (numberOfFilters, relevantFieldFiles)
 
@@ -46,6 +46,14 @@ def get_file_lines(nFolder, nFileName):
 	openedFile = open(DATA_PATH + "%s/moddat/%s" % (nFolder, nFileName))
 	fileLines = list(openedFile.readlines())
 	return fileLines
+
+def get_FWHM(line):
+	split = line.split()
+	FWHM = float(split[6])
+	if FWHM > 2:
+		return True
+	else:
+		return False
 
 def process_file_lines(fileLine, keepStars=False): #returns all line #s, RAs & decs for a file
 	allFileLines = [ (idx,) + get_RA_dec(line) for idx, line in enumerate(fileLine) if not is_star(line)]
@@ -77,6 +85,7 @@ if '.DS_Store' in DATA_FOLDER_LIST:
 
 
 for nFolder in DATA_FOLDER_LIST:
+	print nFolder
 	# Looping through each of the folders
 	nFileNames = get_files(nFolder)
 	flist = open(FLIST_PATH + "%s/FieldList" % nFolder)
@@ -118,11 +127,8 @@ for nFolder in DATA_FOLDER_LIST:
 												for (lineNo[4], RA[4], dec[4]) in myData[4]:
 													if same_point(RA, dec, 0, 4):
 														write_matching_lines(writeFile, myFiles, 4, lineNo[4])	
-														writeFile.write("\n")
-											else:
-												writeFile.write("\n")
-								else:
-									writeFile.write("\n")
+								writeFile.write("\n")
+
 
 
 print("--- %s seconds ---" % (time.time() - START_TIME))

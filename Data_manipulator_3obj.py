@@ -79,7 +79,6 @@ for nFolder in DATA_FOLDER_LIST:
 		writeFile = open(WRITE_PATH + "%s_objects_3.txt" % nFileNames[j][:12], 'w')
 
 		myFiveFiles = [get_file_lines(nFolder, nFileNames[j+i]) for i in range(5)]
-		print myFiveFiles
 		myFiveData = [process_file_lines(fileLine) for fileLine in myFiveFiles]
 
 	 	lineNo = [None]*5
@@ -105,27 +104,23 @@ for nFolder in DATA_FOLDER_LIST:
 									for (lineNo[4], RA[4], dec[4]) in myFiveData[4]:
 										if same_point(RA, dec, 0, 4):
 											write_matching_lines(writeFile, myFiveFiles, 4, lineNo[4]) #01234		
-											writeFile.write("\n")
-										else:
-											writeFile.write("\n")
-											#not working. don't want newline every time line4 doesn't match
 								else:
 									if same_point(RA, dec, 0, 4):
 										write_matching_lines(writeFile, myFiveFiles, 4, lineNo[4]) #0124
-										writeFile.write("\n")
+							writeFile.write("\n")
 	
 						else: 
 							for (lineNo[3], RA[3], dec[3]) in myFiveData[3]:
 								if same_point(RA, dec, 0, 3):
-									write_matching_lines(writeFile, myFiveFiles, 3, lineNo[3]) #013
+									write_matching_lines(writeFile, myFiveFiles, 0, lineNo[0])#013
+									write_matching_lines(writeFile, myFiveFiles, 1, lineNo[1])
+									write_matching_lines(writeFile, myFiveFiles, 3, lineNo[3]) 
 
 									for (lineNo[4], RA[4], dec[4]) in myFiveData[4]:
 
 										if same_point(RA, dec, 0, 4):
 											write_matching_lines(writeFile, myFiveFiles, 4, lineNo[4]) #0134		
-											writeFile.write("\n")
-										else:
-											writeFile.write("\n")
+									writeFile.write("\n")
 
 #03
 				else:
@@ -142,9 +137,8 @@ for nFolder in DATA_FOLDER_LIST:
 
 										if same_point(RA, dec, 0, 4):
 											write_matching_lines(writeFile, myFiveFiles, 4, lineNo[4]) #0234
-											writeFile.write("\n")
-										else:
-											writeFile.write("\n")
+									writeFile.write("\n")
+
 								else:
 									for (lineNo[4], RA[4], dec[4]) in myFiveData[4]:
 
@@ -169,9 +163,9 @@ for nFolder in DATA_FOLDER_LIST:
 
 								if same_point(RA, dec, 0, 4):
 									write_matching_lines(writeFile, myFiveFiles, 4, lineNo[4]) #1234
-									writeFile.write("\n")
-								else:
-									writeFile.write("\n")	
+
+							writeFile.write("\n")
+
 						else: 
 							if same_point(RA, dec, 3, 4):
 								write_matching_lines(writeFile, myFiveFiles, 1, lineNo[1]) #134

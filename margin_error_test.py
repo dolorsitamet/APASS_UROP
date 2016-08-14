@@ -1,3 +1,4 @@
+
 import os
 from os.path import isfile, join
 import time
@@ -21,12 +22,16 @@ if '.DS_Store' in data:
 	data.remove('.DS_Store')
 
 def get_RA_dec(line):
-    split = line.split()
-    return [float(split[9]), float(split[10])]
+	split = line.split()
+	return [float(split[9]), float(split[10])]
 
 def get_FWHM(line):
 	split = line.split()
-	return float(split[6])
+	FWHM = float(split[6])
+	if FWHM > 2:
+		return True
+	else:
+		return False
 
 def is_star(line):
     split = line.split()
@@ -79,7 +84,7 @@ for i in range(0, 1):  #len(data)):
 								if (abs(RA4 - RA1) <= margin_error and abs(dec4 - dec1) <= margin_error):
 
 									for idx5, RA5, dec5 in e_ra_dec:
-										if (abs(RA5 - RA1) <= margin_error and abs(dec5 - dec1) <= margin_error) and get_FWHM(e_lines[idx5]) > 2:
+										if (abs(RA5 - RA1) <= margin_error and abs(dec5 - dec1) <= margin_error) and get_FWHM(e_lines[idx5]):
 											counter = counter + 1
 
 		to_file.write(str(margin_error))
